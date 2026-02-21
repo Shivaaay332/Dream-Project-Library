@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Shivam Parmar's Project Library featuring a collection of interactive web games and utility applications.">
+    <meta name="keywords" content="web projects, games, apps, javascript projects, portfolio, Shivam Parmar">
+    <meta name="author" content="Shivam Parmar">
+    
+    <title>Shivam's Project Library</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* --- Colors & Theme --- */
+        :root {
+            --bg-color: #f4f6f8;
+            --text-color: #333;
+            --card-bg: #ffffff;
+            --card-shadow: 0 10px 20px rgba(0,0,0,0.08);
+            --primary-color: #4e54c8;
+            --secondary-color: #8f94fb;
+            --input-bg: #fff;
+            --border-color: #ddd;
+        }
+
+        body.dark-mode {
+            --bg-color: #1a1a2e;
+            --text-color: #e0e0e0;
+            --card-bg: #16213e;
+            --card-shadow: 0 10px 20px rgba(0,0,0,0.5);
+            --primary-color: #e94560;
+            --secondary-color: #c0354c;
+            --input-bg: #0f172a;
+            --border-color: #334155;
+        }
+
+        /* --- Global Layout --- */
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            transition: 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* --- Profile Section --- */
+        header {
+            text-align: center;
+            margin-top: 40px;
+            margin-bottom: 20px;
+        }
+
+        .profile-pic {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--primary-color);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin: 15px 0 5px 0;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .developer-name {
+            font-size: 1.1rem;
+            opacity: 0.8;
+            margin-top: 0;
+            font-weight: 500;
+        }
+
+        /* --- Switch Toggle --- */
+        .theme-switch-wrapper {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+        .theme-switch {
+            display: inline-block;
+            height: 34px;
+            position: relative;
+            width: 60px;
+        }
+        .theme-switch input { display: none; }
+        .slider {
+            background-color: #ccc;
+            bottom: 0;
+            cursor: pointer;
+            left: 0;
+            position: absolute;
+            right: 0;
+            top: 0;
+            transition: .4s;
+            border-radius: 34px;
+        }
+        .slider:before {
+            background-color: white;
+            bottom: 4px;
+            content: "";
+            height: 26px;
+            left: 4px;
+            position: absolute;
+            transition: .4s;
+            width: 26px;
+            border-radius: 50%;
+        }
+        input:checked + .slider { background-color: var(--primary-color); }
+        input:checked + .slider:before { transform: translateX(26px); }
+
+        /* --- Controls (Search & Filter) --- */
+        .controls-container {
+            width: 90%;
+            max-width: 1100px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .search-bar {
+            width: 100%;
+            max-width: 500px;
+            padding: 12px 20px;
+            border-radius: 25px;
+            border: 2px solid var(--border-color);
+            background-color: var(--input-bg);
+            color: var(--text-color);
+            font-size: 1rem;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .search-bar:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 10px rgba(78, 84, 200, 0.2);
+        }
+
+        .filters {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .filter-btn {
+            background-color: var(--input-bg);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        /* --- Grid Layout --- */
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 25px;
+            width: 90%;
+            max-width: 1100px;
+            padding-bottom: 60px;
+        }
+
+        /* --- Card Design --- */
+        .game-card {
+            background-color: var(--card-bg);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: var(--card-shadow);
+            transition: transform 0.3s, box-shadow 0.3s, opacity 0.3s;
+            text-decoration: none;
+            color: var(--text-color);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(150, 150, 150, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .game-card.hidden {
+            display: none; /* For search/filter logic */
+        }
+
+        .game-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+            border-color: var(--primary-color);
+        }
+
+        .badge-container {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+        }
+
+        .badge {
+            background-color: var(--secondary-color);
+            color: white;
+            font-size: 0.7rem;
+            padding: 4px 8px;
+            border-radius: 10px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .icon-box {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+            margin-top: 10px;
+        }
+
+        .game-title {
+            font-size: 1.4rem;
+            margin: 10px 0;
+            font-weight: 700;
+        }
+
+        .game-desc {
+            font-size: 0.9rem;
+            opacity: 0.7;
+            margin-bottom: 20px;
+            line-height: 1.4;
+            flex-grow: 1; /* Pushes button to bottom */
+        }
+
+        .play-btn {
+            display: inline-block;
+            padding: 10px 25px;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            width: 80%;
+        }
+
+        /* No Results Message */
+        #no-results {
+            display: none;
+            text-align: center;
+            width: 100%;
+            font-size: 1.2rem;
+            color: var(--text-color);
+            opacity: 0.7;
+            margin-top: 20px;
+        }
+
+        /* Responsive Fix */
+        @media (max-width: 600px) {
+            h1 { font-size: 2rem; }
+            .games-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="theme-switch-wrapper">
+        <label class="theme-switch" for="checkbox">
+            <input type="checkbox" id="checkbox" />
+            <div class="slider round"></div>
+        </label>
+    </div>
+
+    <header>
+        <div class="profile-container">
+            <img src="profile.jpg" alt="Shivam Parmar" class="profile-pic" onerror="this.src='https://cdn-icons-png.flaticon.com/512/4140/4140048.png'">
+            <h1>My Projects Library</h1>
+            <p class="developer-name">Developed By Shivam Parmar</p>
+        </div>
+    </header>
+
+    <div class="controls-container">
+        <input type="text" id="searchInput" class="search-bar" placeholder="Search projects (e.g., Ludo, Typing)...">
+        <div class="filters">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="game">Games</button>
+            <button class="filter-btn" data-filter="app">Apps</button>
+            <button class="filter-btn" data-filter="puzzle">Puzzles</button>
+        </div>
+    </div>
+
+    <main class="games-grid" id="projectsGrid">
+        
+        <a href="Ludogame/index.html" class="game-card" data-category="game board">
+            <div class="badge-container"><span class="badge">Game</span></div>
+            <div class="icon-box"><i class="fas fa-dice"></i></div>
+            <div class="game-title">Ultimate Ludo Pro</div>
+            <div class="game-desc">Real 3D tokens, gaming room vibe, and smart AI strategy.</div>
+            <div class="play-btn">Play Game</div>
+        </a>
+
+        <a href="Hangman/index.html" class="game-card" data-category="game word puzzle">
+            <div class="badge-container"><span class="badge">Game</span></div>
+            <div class="icon-box"><i class="fas fa-user-injured"></i></div>
+            <div class="game-title">Hangman</div>
+            <div class="game-desc">Word guessing game. Save the man!</div>
+            <div class="play-btn">Play Game</div>
+        </a>
+
+        <a href="MindGame/index.html" class="game-card" data-category="game puzzle">
+            <div class="badge-container"><span class="badge">Puzzle</span></div>
+            <div class="icon-box"><i class="fas fa-brain"></i></div>
+            <div class="game-title">Mind Game</div>
+            <div class="game-desc">Test your memory power.</div>
+            <div class="play-btn">Play Game</div>
+        </a>
+
+        <a href="ChessMaster/index.html" class="game-card" data-category="game board strategy">
+            <div class="badge-container"><span class="badge">Game</span></div>
+            <div class="icon-box"><i class="fas fa-chess-knight"></i></div>
+            <div class="game-title">ChessMaster</div>
+            <div class="game-desc">Challenge an Expert AI and test your strategy.</div>
+            <div class="play-btn">Play Game</div>
+        </a>
+
+        <a href="TicTacToe/index.html" class="game-card" data-category="game board">
+            <div class="badge-container"><span class="badge">Game</span></div>
+            <div class="icon-box"><i class="fas fa-times"></i></div>
+            <div class="game-title">Tic Tac Toe</div>
+            <div class="game-desc">The classic X vs O strategy.</div>
+            <div class="play-btn">Play Game</div>
+        </a>
+
+        <a href="MazeGame/index.html" class="game-card" data-category="game puzzle">
+            <div class="badge-container"><span class="badge">Puzzle</span></div>
+            <div class="icon-box"><i class="fas fa-puzzle-piece"></i></div>
+            <div class="game-title">Maze Puzzle</div>
+            <div class="game-desc">Solve the complex maze path.</div>
+            <div class="play-btn">Play Game</div>
+        </a>
+
+        <a href="CarGame/index.html" class="game-card" data-category="game racing">
+            <div class="badge-container"><span class="badge">Game</span></div>
+            <div class="icon-box"><i class="fas fa-car-side"></i></div>
+            <div class="game-title">Speed Racer Pro</div>
+            <div class="game-desc">Dodge traffic, collect fuel & beat the High Score! Real Graphics included.</div>
+            <div class="play-btn">Play Now</div>
+        </a>
+
+        <a href="SpaceWaves/index.html" class="game-card card-space" data-category="game arcade">
+            <div class="badge-container"><span class="badge">Game</span></div>
+            <div class="icon-box"><i class="fas fa-rocket"></i></div>
+            <div class="game-title">Space Waves</div>
+            <div class="game-desc">Hold to fly Up, release to Dive. Slide on walls, dodge spikes & beat the high score!</div>
+            <div class="play-btn">Play Now</div>
+        </a>
+
+        <a href="snake_final/index.html" class="game-card" data-category="game arcade">
+            <div class="badge-container"><span class="badge">Game</span></div>
+            <div class="icon-box"><i class="fas fa-dragon"></i></div>
+            <div class="game-title">Ultimate Snake Pro</div>
+            <div class="game-desc">Eat Food, dodge Poison, grab Power-ups & unlock new Levels!</div>
+            <div class="play-btn">Play Now</div>
+        </a>
+
+        <a href="SudokuGame/index.html" class="game-card" data-category="game puzzle">
+            <div class="badge-container"><span class="badge">Puzzle</span></div>
+            <div class="icon-box"><i class="fas fa-border-all"></i></div>
+            <div class="game-title">Master Sudoku</div>
+            <div class="game-desc">Classic logic puzzle with Neon Theme, Undo, Hints, Notes & Timer features.</div>
+            <div class="play-btn">Play Now</div>
+        </a>
+
+        <a href="TypeMaster/index.html" class="game-card" data-category="app utility">
+            <div class="badge-container"><span class="badge" style="background-color: #28a745;">App</span></div>
+            <div class="icon-box"><i class="fas fa-keyboard"></i></div>
+            <div class="game-title">TypeMaster</div>
+            <div class="game-desc">Test and improve typing speed.</div>
+            <div class="play-btn">Open App</div>
+        </a>
+
+        <div id="no-results">No projects found matching your search.</div>
+        
+    </main>
+
+    <script>
+        // Dark Mode Logic
+        const toggleSwitch = document.querySelector('.theme-switch input[type="checkbox"]');
+        const currentTheme = localStorage.getItem('theme');
+
+        if (currentTheme) {
+            document.body.classList.add(currentTheme === 'dark' ? 'dark-mode' : '');
+            if (currentTheme === 'dark') toggleSwitch.checked = true;
+        }
+
+        function switchTheme(e) {
+            if (e.target.checked) {
+                document.body.classList.add('dark-mode');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                document.body.classList.remove('dark-mode');
+                localStorage.setItem('theme', 'light');
+            }
+        }
+        toggleSwitch.addEventListener('change', switchTheme);
+
+        // --- NEW: Search & Filter Logic ---
+        const searchInput = document.getElementById('searchInput');
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const cards = document.querySelectorAll('.game-card');
+        const noResults = document.getElementById('no-results');
+
+        function filterProjects() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const activeFilter = document.querySelector('.filter-btn.active').getAttribute('data-filter');
+            let visibleCount = 0;
+
+            cards.forEach(card => {
+                const title = card.querySelector('.game-title').innerText.toLowerCase();
+                const desc = card.querySelector('.game-desc').innerText.toLowerCase();
+                const category = card.getAttribute('data-category');
+
+                const matchesSearch = title.includes(searchTerm) || desc.includes(searchTerm);
+                const matchesFilter = activeFilter === 'all' || category.includes(activeFilter);
+
+                if (matchesSearch && matchesFilter) {
+                    card.classList.remove('hidden');
+                    visibleCount++;
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+
+            // Show "No Results" message if everything is hidden
+            if (visibleCount === 0) {
+                noResults.style.display = 'block';
+            } else {
+                noResults.style.display = 'none';
+            }
+        }
+
+        // Event Listeners for Search and Filters
+        searchInput.addEventListener('input', filterProjects);
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                // Remove active class from all buttons
+                filterBtns.forEach(b => b.classList.remove('active'));
+                // Add active class to clicked button
+                e.target.classList.add('active');
+                // Run filter function
+                filterProjects();
+            });
+        });
+    </script>
+
+</body>
+</html>
